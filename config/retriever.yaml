@@ -1,0 +1,14 @@
+default_type: "similarity"
+
+settings:
+  similarity:
+    search_type: "similarity"
+    search_kwargs:
+      k: 3 
+  
+  mmr:
+    search_type: "mmr"
+    search_kwargs:
+      k: 3
+      fetch_k: 10  
+      lambda_mult: 0.5 

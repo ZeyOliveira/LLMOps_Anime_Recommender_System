@@ -1,0 +1,12 @@
+default_provider: "huggingface"
+
+providers:
+  huggingface:
+    model_name: "sentence-transformers/all-MiniLM-L6-v2" 
+    device: "cpu" 
+    encode_kwargs:
+      normalize_embeddings: true
+
+  openai:
+    model_name: "text-embedding-3-small" 
+    dimensions: 1536

@@ -5,7 +5,7 @@ metadata:
   labels:
     app: llmops
 spec:
-  replicas: 1
+  replicas: 1 # Para produção, geralmente usamos 2 ou mais para alta disponibilidade
   selector:
     matchLabels:
       app: llmops
@@ -16,14 +16,37 @@ spec:
     spec:
       containers:
       - name: llmops-container
-        image: llmops-app:latest  # Use local image
+        image: llmops-app:latest
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8501
+        
+        # --- Limites de Recursos ---
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+
+        # --- Verificação de Saúde (Health Checks) ---
+        readinessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
         envFrom:
           - secretRef:
               name: llmops-secrets 
-
 ---
 apiVersion: v1
 kind: Service
@@ -35,5 +58,5 @@ spec:
     app: llmops
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8501
+      port: 80       # Porta externa (HTTP padrão)
+      targetPort: 8501 # Porta interna do Streamlit

@@ -1,16 +1,36 @@
 import sys
+import traceback
+from typing import Optional
 
-class CustomException(Exception):
-    def __init__(self, message: str, error_detail: Exception = None):
-        self.error_message = self.get_detailed_error_message(message, error_detail)
-        super().__init__(self.error_message)
 
-    @staticmethod
-    def get_detailed_error_message(message, error_detail):
-        _, _, exc_tb = sys.exc_info()
-        file_name = exc_tb.tb_frame.f_code.co_filename if exc_tb else "Unknown File"
-        line_number = exc_tb.tb_lineno if exc_tb else "Unknown Line"
-        return f"{message} | Error: {error_detail} | File: {file_name} | Line: {line_number}"
+class AppException(Exception):
+    """
+    Exceção base reutilizável para aplicações Python e MLOps.
 
-    def __str__(self):
-        return self.error_message
+    Encapsula a exceção original e adiciona contexto mínimo
+    (arquivo e linha) sem over-engineering.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        original_exception: Optional[Exception] = None,
+    ):
+        super().__init__(message)
+        self.message = message
+        self.original_exception = original_exception
+        self.trace = self._extract_trace()
+
+    def _extract_trace(self) -> str:
+        _, _, tb = sys.exc_info()
+        if tb is None:
+            return "No traceback available"
+
+        frame = tb.tb_frame
+        return f"{frame.f_code.co_filename}:{tb.tb_lineno}"
+
+    def __str__(self) -> str:
+        base = f"{self.message} | Location: {self.trace}"
+        if self.original_exception:
+            return f"{base} | Caused by: {repr(self.original_exception)}"
+        return base

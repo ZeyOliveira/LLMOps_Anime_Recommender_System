@@ -1,4 +1,22 @@
-venv/
-logs/
-ANIME_RECOMMENDER.egg-info/
+# --- Ambiente Python ---
+.venv/
+__pycache__/
+*.pyc
+llmops_rag_anime_recommender.egg-info/
+
+# --- Dados e Banco de Dados (Persistência Local) ---
+chroma_db/
+data/anime_processed.csv
+
+# --- Logs ---
+logs/*.log
+*.log
+
+# --- Referências e Legado ---
+arquivos_pf/
+
+# --- Segredos e Configurações Sensíveis ---
 .env
+
+# --- Ferramentas de Teste e Markdown ---
+teste_me.py

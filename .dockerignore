@@ -1,0 +1,20 @@
+# --- Legado e Referências ---
+arquivos_pf/
+
+# --- Python & Cache ---
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+llmops_rag_anime_recommender.egg-info/
+
+# --- Segredos (Crucial) ---
+.env
+
+# --- Dados Dinâmicos ---
+chroma_db/
+logs/
+data/anime_processed.csv
+
+# --- Scripts de Teste Locais ---
+teste_me.py
